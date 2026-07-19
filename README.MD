@@ -61,6 +61,7 @@ aws s3api create-bucket \
   --region "${AWS_REGION}"
 ```
 
+
 Para outras regiões, normalmente seria necessário incluir
 `--create-bucket-configuration`.
 
