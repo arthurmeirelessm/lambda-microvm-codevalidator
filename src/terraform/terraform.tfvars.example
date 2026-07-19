@@ -1,0 +1,6 @@
+app_lambda_s3_key = "lambda-artifacts/webscraping-bedrock-app.zip"
+
+# Optional examples
+# app_lambda_s3_object_version = "3Lg..."
+# code_key_prefix              = "lambda-artifacts/"
+# code_key_suffix              = ".zip"
