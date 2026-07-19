@@ -17,6 +17,9 @@ geração de código assistida por agente, validação em ambiente isolado e imp
 
 
 
+![Arquitetura](microvm-v4.png)
+
+
 Este documento registra o fluxo de comandos usado na PoC, desde:
 
 - criação do bucket S3;
