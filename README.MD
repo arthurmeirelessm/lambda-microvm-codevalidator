@@ -1,8 +1,7 @@
 # lambda-microvm-codevalidator
 
 
-Esta PoC resolve o problema de dar autonomia controlada para um agente de código operar um ciclo mais completo do que só “gerar arquivos”. A proposta é usar AWS
-Lambda MicroVM como ambiente isolado para o Codex produzir, ajustar, testar e validar código com mais segurança operacional, sem depender diretamente do ambiente
+A proposta é usar AWS Lambda MicroVM como ambiente isolado para o Codex produzir, ajustar, testar e validar código com mais segurança operacional, sem depender diretamente do ambiente
 local do usuário e com melhor separação entre execução, experimentação e promoção de artefatos.
 
 O objetivo dela é conectar três partes em um fluxo único. A primeira é a MicroVM, que funciona como workspace isolado para geração e validação técnica. A segunda é a
