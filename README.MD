@@ -1,19 +1,20 @@
 # lambda-microvm-codevalidator
 
 
-A proposta é usar AWS Lambda MicroVM como ambiente isolado para o Codex produzir, ajustar, testar e validar código com mais segurança operacional, sem depender diretamente do ambiente
-local do usuário e com melhor separação entre execução, experimentação e promoção de artefatos.
-
-O objetivo dela é conectar três partes em um fluxo único. A primeira é a MicroVM, que funciona como workspace isolado para geração e validação técnica. A segunda é a
-aplicação Lambda alvo, que representa o código que o agente está construindo ou atualizando. A terceira é o mecanismo de promoção automática, em que um novo .zip
-publicado no S3 dispara uma Lambda deployer, responsável por atualizar o código da Lambda principal. Em resumo, a PoC foi pensada para demonstrar um caminho de
-geração de código assistida por agente, validação em ambiente isolado e implantação posterior de forma automatizada e rastreável.
-
-A linha de pensamento é esta: imagine um projeto extremamente crítico, com milhares ou milhões de usuários, em que você não quer “sujar” o ambiente local nem o
+Imagine um projeto extremamente crítico, com milhares ou milhões de usuários, em que você não quer “sujar” o ambiente local nem o
 ambiente principal de desenvolvimento na AWS para testar uma nova feature, correção ou tarefa exploratória com um agente de código. Nesse cenário, a MicroVM entra
 como um sandbox operacional: o agente recebe autonomia para trabalhar, testar e validar em um ambiente isolado, reduzindo risco sobre o restante da stack. A PoC
 existe justamente para mostrar como AWS Lambda MicroVM pode servir como essa camada de isolamento, enquanto o S3 e a Lambda deployer fazem a ponte entre o artefato
 validado e a atualização controlada da aplicação.
+
+A proposta é usar AWS Lambda MicroVM como ambiente isolado para o Codex produzir, ajustar, testar e validar código com mais segurança operacional, sem depender diretamente do ambiente
+local do usuário e com melhor separação entre execução, experimentação e promoção de artefatos.
+
+Aqui conectamos três partes em um fluxo único. A primeira é a MicroVM, que funciona como workspace isolado para geração e validação técnica. A segunda é a
+aplicação Lambda alvo, que representa o código que o agente está construindo ou atualizando. A terceira é o mecanismo de promoção automática, em que um novo .zip
+publicado no S3 dispara uma Lambda deployer, responsável por atualizar o código da Lambda principal. Em resumo, a PoC foi pensada para demonstrar um caminho de
+geração de código assistida por agente, validação em ambiente isolado e implantação posterior de forma automatizada e rastreável.
+
 
 
 Este documento registra o fluxo de comandos usado na PoC, desde:
