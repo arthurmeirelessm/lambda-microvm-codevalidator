@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda Web Summarizer
+
+Resources:
+  WebSummarizerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.handler.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - arm64
+      Timeout: 30
+      MemorySize: 512
+      Environment:
+        Variables:
+          BEDROCK_MODEL_ID: global.anthropic.claude-sonnet-4-6
+          HTTP_TIMEOUT_SECONDS: 10
+          MAX_RESPONSE_BYTES: 2000000
+          MAX_CONTENT_CHARACTERS: 50000
+          LOG_LEVEL: INFO
+          APP_TEST_MODE: "true"
+          APP_TEST_SUMMARY: "Resumo controlado do runtime SAM."
+          APP_TEST_PAGE_TITLE: "Example Domain"
+          APP_TEST_PAGE_CONTENT: "Example Domain page content used to validate SAM local invoke without external dependencies."

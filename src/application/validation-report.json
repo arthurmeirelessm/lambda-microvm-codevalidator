@@ -1,0 +1,51 @@
+{
+  "status": "PASSED",
+  "microvmId": "microvm-9235b24a-c812-3b6f-a9b3-85e31669e012",
+  "pythonVersion": "3.12.13",
+  "unitTests": {
+    "status": "PASSED",
+    "total": 37,
+    "passed": 37,
+    "failed": 0
+  },
+  "coverage": {
+    "status": "PASSED",
+    "percentage": 87.39,
+    "minimumRequired": 85
+  },
+  "lint": {
+    "status": "PASSED"
+  },
+  "handlerExecution": {
+    "status": "PASSED"
+  },
+  "samValidation": {
+    "status": "PASSED",
+    "build": "sam build --use-container",
+    "invoke": "sam local invoke --no-memory-limit --container-host 172.17.0.1 --container-host-interface 0.0.0.0 --event events/<file>.json"
+  },
+  "packageValidation": {
+    "status": "PASSED",
+    "artifact": "package.zip",
+    "artifactSizeBytes": 1634800
+  },
+  "realIntegrationTests": {
+    "status": "PASSED",
+    "executed": true,
+    "internet": true,
+    "bedrock": true,
+    "results": {
+      "bedrockSuccessUrl": "https://en.wikipedia.org/wiki/Amazon_Web_Services",
+      "bedrockModelId": "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "blockedUrl": "https://conteudos.xpi.com.br/aprenda-a-investir/relatorios/cdi/",
+      "blockedUrlStatus": 403,
+      "blockedUrlReason": "Acesso Bloqueado na origem"
+    }
+  },
+  "realBedrockTest": {
+    "status": "PASSED",
+    "modelId": "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "validatedWithUrl": "https://en.wikipedia.org/wiki/Amazon_Web_Services"
+  },
+  "validatedAt": "2026-07-18T23:40:21.378237+00:00"
+}

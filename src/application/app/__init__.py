@@ -1,0 +1,1 @@
+"""Lambda web summarizer package."""

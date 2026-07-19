@@ -1,28 +1,29 @@
 # lambda-microvm-codevalidator
 
-Este documento registra, de forma genérica, o fluxo de comandos desde:
+Este documento registra o fluxo de comandos usado na PoC, desde:
 
 - criação do bucket S3;
 - criação da role usada no build da imagem;
-- empacotamento da estrutura `Dockerfile`, `app.py` e `requirements.txt`;
+- empacotamento da estrutura `Dockerfile`, `app.py` e stat.sh;
 - criação da imagem da MicroVM;
 - execução da MicroVM com a imagem criada.
 
-Os valores reais da PoC foram removidos de propósito. Use placeholders e
-substitua pelos nomes e ARNs corretos do seu ambiente.
+Os nomes abaixo foram atualizados com os recursos efetivamente usados no
+fluxo mais recente de teste.
 
-## Variáveis de exemplo
+## Variáveis usadas
 
 ```bash
-AWS_REGION="<aws-region>"
-ACCOUNT_ID="<aws-account-id>"
+AWS_REGION="us-east-1"
+ACCOUNT_ID=""
 ARTIFACT_BUCKET="microvm-codevalidator-poc-${ACCOUNT_ID}"
-IMAGE_NAME="code-artifact"
+IMAGE_NAME="poc-microvm-docker-fixed2"
 IMAGE_VERSION="1.0"
 BASE_IMAGE_ARN="arn:aws:lambda:us-east-1:aws:microvm-image:al2023-1"
 BUILD_ROLE_NAME="microvm-codevalidator-poc-build-role"
 BUILD_ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/${BUILD_ROLE_NAME}"
 IMAGE_ARN="arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:microvm-image:${IMAGE_NAME}"
+CURRENT_MICROVM_ID="microvm-9235b24a-c812-3b6f-a9b3-85e31669e012"
 ```
 
 ## 1. Conferência inicial
@@ -57,20 +58,11 @@ Trust policy:
 cat > trust-policy.json <<'EOF'
 {
   "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole",
-      "Condition": {
-        "StringEquals": {
-          "aws:SourceAccount": "<aws-account-id>"
-        }
-      }
-    }
-  ]
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": { "Service": "lambda.amazonaws.com" },
+    "Action": ["sts:AssumeRole", "sts:TagSession"]
+  }]
 }
 EOF
 ```
@@ -116,7 +108,7 @@ Anexando a policy inline:
 ```bash
 aws iam put-role-policy \
   --role-name "${BUILD_ROLE_NAME}" \
-  --policy-name "<build-role-policy-name>" \
+  --policy-name "microvm-codevalidator-poc-build-policy" \
   --policy-document file://build-role-policy.json
 ```
 
@@ -179,11 +171,11 @@ aws lambda-microvms run-microvm \
   --image-version "${IMAGE_VERSION}" \
   --execution-role-arn "${BUILD_ROLE_ARN}" \
   --ingress-network-connectors '[
-    "arn:aws:lambda:<aws-region>:aws:network-connector:aws-network-connector:HTTP_INGRESS",
-    "arn:aws:lambda:<aws-region>:aws:network-connector:aws-network-connector:SHELL_INGRESS"
+    "arn:aws:lambda:us-east-1:aws:network-connector:aws-network-connector:HTTP_INGRESS",
+    "arn:aws:lambda:us-east-1:aws:network-connector:aws-network-connector:SHELL_INGRESS"
   ]' \
   --egress-network-connectors '[
-    "arn:aws:lambda:<aws-region>:aws:network-connector:aws-network-connector:INTERNET_EGRESS"
+    "arn:aws:lambda:us-east-1:aws:network-connector:aws-network-connector:INTERNET_EGRESS"
   ]' \
   --idle-policy '{
     "maxIdleDurationSeconds": 900,
@@ -197,7 +189,7 @@ aws lambda-microvms run-microvm \
 
 ```bash
 aws lambda-microvms get-microvm \
-  --microvm-identifier "<microvm-id>"
+  --microvm-identifier "${CURRENT_MICROVM_ID}"
 ```
 
 ## 9. Passo seguinte comum
@@ -206,9 +198,28 @@ Se a MicroVM for criada com `SHELL_INGRESS`, o próximo passo costuma ser:
 
 ```bash
 aws lambda-microvms create-microvm-shell-auth-token \
-  --microvm-identifier "<microvm-id>" \
+  --microvm-identifier "${CURRENT_MICROVM_ID}" \
   --expiration-in-minutes 30
 ```
 
 Depois disso, a conexão costuma ser feita com `websocat` usando a porta
 `8022`.
+
+## Complemento da PoC
+
+Além da criação e uso da Lambda MicroVM, a estrutura deste repositório foi
+orientada para dar autonomia ao Codex com `aws-lambda-microvms` skills no
+ciclo de geração, ajuste, validação e preparação de deploy de código.
+
+Também foi criada uma estrutura Terraform complementar para o fluxo de
+implantação:
+
+- bucket S3: `microvm-codevalidator-poc-275573050667`
+- Lambda principal: `webscraping-bedrock-app`
+- Lambda de deploy: `webscraping-bedrock-deployer`
+
+Nesse fluxo, um novo arquivo `.zip` enviado ao bucket S3 dispara a Lambda
+`webscraping-bedrock-deployer`, que executa o `UpdateFunctionCode` da Lambda
+`webscraping-bedrock-app`. A ideia central da PoC foi cobrir não só geração ou
+atualização de código, mas também o passo seguinte de promoção do pacote para
+o ambiente produtivo.
