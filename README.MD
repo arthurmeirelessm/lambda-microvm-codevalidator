@@ -21,7 +21,7 @@ Este documento registra o fluxo de comandos usado na PoC, desde:
 
 - criação do bucket S3;
 - criação da role usada no build da imagem;
-- empacotamento da estrutura `Dockerfile`, `app.py` e stat.sh;
+- empacotamento da estrutura `Dockerfile`, `app.py` e start.sh;
 - criação da imagem da MicroVM;
 - execução da MicroVM com a imagem criada.
 
