@@ -240,6 +240,72 @@ aws lambda-microvms create-microvm-shell-auth-token \
 Depois disso, a conexão costuma ser feita com `websocat` usando a porta
 `8022`.
 
+## Instalar Lambda MicroVM Skill
+
+### Pré requisitos
+
+```
+node -v
+npm -v
+npx --version
+uvx --version
+codex --version
+aws --version
+
+```
+
+### Comando
+
+```
+npx skills add https://github.com/aws/agent-toolkit-for-aws/tree/main/skills/specialized-skills/serverless-skills/aws-lambda-microvms --yes --global
+
+```
+
+
+
+## Prompt exemplo usando Agente de codigo + Lambda MicroVM Skills
+
+```
+Utilize a skill aws-lambda-microvms.
+
+  Pegue o código local deste repositório como base e trabalhe com autonomia somente para geração, alteração, instalação de dependências e testes do código dentro de
+  uma AWS Lambda MicroVM isolada.
+
+  Objetivo:
+  - analisar o código atual;
+  - implementar a feature solicitada;
+  - instalar dependências novas, se necessário;
+  - atualizar testes e arquivos de configuração relacionados;
+  - executar lint, testes unitários, testes de integração/local runtime e demais validações técnicas necessárias;
+  - corrigir automaticamente o que falhar durante esse ciclo;
+  - repetir o processo até o código ficar validado dentro da MicroVM.
+
+  Limites de autonomia:
+  - você tem autonomia para gerar, alterar, instalar dependências e testar o código;
+  - você não tem autonomia para enviar artefatos para S3;
+  - você não tem autonomia para promover deploy;
+  - você não deve fazer commit, push ou alterar infraestrutura sem aprovação humana;
+  - se o código for validado com sucesso na MicroVM, pare e me peça aprovação explícita antes de empacotar para envio ao S3 ou iniciar qualquer etapa de publicação.
+
+  Ao final da validação na MicroVM, me entregue:
+  - resumo do que foi alterado;
+  - dependências instaladas;
+  - comandos executados;
+  - resultado dos testes e validações;
+  - status final da validação;
+  - se estiver tudo certo, um pedido claro de aprovação humana para seguir com empacotamento e envio ao S3.
+
+  Feature a implementar:
+  <descreva aqui a feature>
+
+  Restrições:
+  - use o código local atual como fonte da verdade;
+  - preserve o que já funciona;
+  - não publique nada sem aprovação humana explícita;
+  - se houver bloqueio de ambiente, informe exatamente o erro, o impacto e o que depende de aprovação.
+
+```
+
 ## Complemento da PoC
 
 Além da criação e uso da Lambda MicroVM, a estrutura deste repositório foi
